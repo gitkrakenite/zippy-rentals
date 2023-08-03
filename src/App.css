@@ -1,0 +1,8 @@
+.anim-text {
+  transition: all 0.4s ease;
+}
+
+.anim-text:hover {
+  color: rgb(6, 129, 129);
+  font-weight: 600;
+}
