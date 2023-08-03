@@ -58,7 +58,7 @@ const Header = () => {
             <div
               className="fixed top-0 left-0 w-full z-[999] py-[15px] px-[8px]  lg:px-[5em] flex flex-col h-full"
               style={{
-                background: "rgba(192, 190, 190, 0.9)",
+                background: "rgba(236, 234, 234, 0.9)",
                 backdropFilter: "blur(4px)",
                 zIndex: 2,
               }}
