@@ -2,7 +2,7 @@ import carBg from "../../assets/rangeRm.png";
 
 const Hero = () => {
   return (
-    <div className=" px-[8px] md:px-[3em]  xl:px-[5em] pt-[5em]">
+    <div className=" px-[8px] md:px-[3em]  xl:px-[5em] pt-[5em]" id="home">
       <div className="flex flex-col lg:flex-row justify-between items-center">
         {/* text */}
         <div className="flex-[0.5]">

@@ -6,3 +6,18 @@
   color: rgb(6, 129, 129);
   font-weight: 600;
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 295px) {
+  .text-user {
+    display: none;
+  }
+}
+@media (max-width: 295px) {
+  .top-bar {
+    display: none;
+  }
+}

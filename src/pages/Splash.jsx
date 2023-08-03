@@ -1,14 +1,48 @@
-import { AiOutlineCar, AiOutlineSmile } from "react-icons/ai";
+import { AiOutlineArrowUp, AiOutlineCar, AiOutlineSmile } from "react-icons/ai";
 import Header from "../components/Header";
 import Hero from "../components/hero/Hero";
 import { BsFuelPump, BsTree } from "react-icons/bs";
 import About from "../components/About";
 import Contact from "../components/Contact";
+import { useEffect, useState } from "react";
+import Careers from "../components/Careers";
 // import Featured from "../components/Featured";
 
 const Splash = () => {
+  // scroll to top functionality
+  const [showArrow, setShowArrow] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.pageYOffset > 300) {
+        setShowArrow(true);
+      } else {
+        setShowArrow(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div>
+      {/* arrow to scroll to top */}
+      {showArrow && (
+        <div
+          className="fixed bottom-20 right-4 text-3xl z-[999] cursor-pointer bg-teal-700 text-zinc-50 rounded-full p-[5px]"
+          onClick={handleScrollTop}
+        >
+          <AiOutlineArrowUp />
+        </div>
+      )}
       <Header />
       <Hero />
       <div className="  px-[10px] md:px-[3em] xl:px-[5em] mt-[4em]">
@@ -63,6 +97,7 @@ const Splash = () => {
       </div>
       {/*  */}
       <About />
+      <Careers />
       <Contact />
       {/*  */}
     </div>

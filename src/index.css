@@ -67,3 +67,9 @@
 html {
   scrollbar-color: rgb(103, 104, 104) black;
 }
+
+* {
+  margin: 0;
+  padding: 0;
+  transition: all 0.5s ease;
+}

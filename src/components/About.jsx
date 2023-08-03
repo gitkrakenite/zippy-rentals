@@ -2,7 +2,7 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 
 const About = () => {
   return (
-    <div>
+    <div id="about">
       {/* wrapper */}
       <div className="flex flex-col lg:flex-row px-[10px] md:px-[3em] xl:px-[5em] mt-[4em] items-center gap-[20px] pb-[1em]">
         {/* imgside */}

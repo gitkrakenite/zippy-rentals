@@ -6,8 +6,14 @@ const Contact = () => {
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setMsgSent(true);
+  };
+
   return (
-    <div>
+    <div id="contact">
       {/* wrapper */}
       <div className="flex flex-col lg:flex-row items-center gap-[40px] lg:gap-[10px] px-[10px] md:px-[3em] xl:px-[5em] mt-[4em] pb-[1em] justify-between">
         {/* form */}
@@ -28,7 +34,7 @@ const Contact = () => {
               </div>
             </div>
           ) : (
-            <form action="">
+            <form onSubmit={handleSubmit}>
               <div className="flex flex-col gap-[10px] mb-[20px]">
                 <label htmlFor="fullname">Enter Your Full Name</label>
                 <input
@@ -36,6 +42,9 @@ const Contact = () => {
                   placeholder="name"
                   id="fullname"
                   className="bg-transparent border-2 border-zinc-500 p-[5px] rounded-lg"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  required
                 />
               </div>
               <div className="flex flex-col gap-[10px] mb-[20px]">
@@ -45,6 +54,9 @@ const Contact = () => {
                   placeholder="email address"
                   id="email"
                   className="bg-transparent border-2 border-zinc-500 p-[5px] rounded-lg"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                 />
               </div>
               <div className="flex flex-col gap-[10px] mb-[20px]">
@@ -56,10 +68,13 @@ const Contact = () => {
                   rows="3"
                   placeholder="your message"
                   className="bg-transparent border-2 border-zinc-500 p-[5px] rounded-lg"
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                  required
                 ></textarea>
               </div>
               <div className="text-center">
-                <p className="">
+                <p className="" onClick={handleSubmit}>
                   {" "}
                   <span className="bg-teal-700 px-[25px] py-[10px] text-zinc-300 rounded-lg cursor-pointer">
                     Send Message

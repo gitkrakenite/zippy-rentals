@@ -1,6 +1,7 @@
 // import { Link } from "react-router-dom";
 import { AiOutlineMenu, AiOutlineClose } from "react-icons/ai";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 const Header = () => {
   const [showMenu, setShowMenu] = useState(false);
   return (
@@ -31,12 +32,22 @@ const Header = () => {
               {/* menu items */}
               <div>
                 <ul className=" hidden lg:flex gap-8">
-                  <li className="cursor-pointer anim-text">Home</li>
-                  <li className="cursor-pointer anim-text">Cars</li>
-                  <li className="cursor-pointer anim-text">Pricing</li>
-                  <li className="cursor-pointer anim-text">Careers</li>
-                  <li className="cursor-pointer anim-text">About</li>
-                  <li className="cursor-pointer anim-text">Contact Us</li>
+                  <li className="cursor-pointer anim-text">
+                    <a href="#home">Home</a>
+                  </li>
+                  <Link to="/cars">
+                    <li className="cursor-pointer anim-text">Cars</li>
+                  </Link>
+                  {/* <li className="cursor-pointer anim-text">Pricing</li> */}
+                  <li className="cursor-pointer anim-text">
+                    <a href="#careers">Careers</a>
+                  </li>
+                  <li className="cursor-pointer anim-text">
+                    <a href="#about">About</a>
+                  </li>
+                  <li className="cursor-pointer anim-text">
+                    <a href="#contact">Contact Us</a>
+                  </li>
                 </ul>
               </div>
               <div className="lg:hidden">
@@ -90,12 +101,39 @@ const Header = () => {
                 {/* menu items */}
                 <div className="w-full pr-3">
                   <ul className="flex flex-col gap-8 items-end w-full">
-                    <li className="  cursor-pointer  transition-all">Home</li>
-                    <li className="  cursor-pointer ">Cars</li>
-                    <li className="  cursor-pointer ">Pricing</li>
-                    <li className="cursor-pointer ">Careers</li>
-                    <li className="  cursor-pointer ">About</li>
-                    <li className=" cursor-pointer ">Contact Us</li>
+                    <li
+                      className="cursor-pointer anim-text"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      <a href="#home">Home</a>
+                    </li>
+                    <Link to="/cars">
+                      <li
+                        className="cursor-pointer anim-text"
+                        onClick={() => setShowMenu(false)}
+                      >
+                        Cars
+                      </li>
+                    </Link>
+                    {/* <li className="cursor-pointer anim-text" onClick={()=>setShowMenu(false)}>Pricing</li> */}
+                    <li
+                      className="cursor-pointer anim-text"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      <a href="#careers">Careers</a>
+                    </li>
+                    <li
+                      className="cursor-pointer anim-text"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      <a href="#about">About</a>
+                    </li>
+                    <li
+                      className="cursor-pointer anim-text"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      <a href="#contact">Contact Us</a>
+                    </li>
                   </ul>
                 </div>
               </div>
