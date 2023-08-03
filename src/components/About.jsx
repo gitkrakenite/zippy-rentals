@@ -1,8 +1,10 @@
+import { AiOutlineArrowRight } from "react-icons/ai";
+
 const About = () => {
   return (
     <div>
       {/* wrapper */}
-      <div className="flex px-[10px] md:px-[3em] xl:px-[5em] mt-[4em] items-center gap-[20px] pb-[1em]">
+      <div className="flex flex-col lg:flex-row px-[10px] md:px-[3em] xl:px-[5em] mt-[4em] items-center gap-[20px] pb-[1em]">
         {/* imgside */}
         <div className="flex-[0.5]">
           <img
@@ -26,8 +28,11 @@ const About = () => {
               we offer you the ability to drive your dream car without going
               through the headache of purchasing it. Whether you are going for a
               party, business meeating or gym, we have the perfect car for you.
-              Contact us today.
             </p>
+            <div className="py-[20px] flex items-center gap-[10px] cursor-pointer hover:text-emerald-700">
+              <p> Contact us today.</p>
+              <AiOutlineArrowRight className="text-xl" />
+            </div>
           </div>
         </div>
         {/*  */}

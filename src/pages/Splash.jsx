@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import Hero from "../components/hero/Hero";
 import { BsFuelPump, BsTree } from "react-icons/bs";
 import About from "../components/About";
+import Contact from "../components/Contact";
 // import Featured from "../components/Featured";
 
 const Splash = () => {
@@ -62,6 +63,7 @@ const Splash = () => {
       </div>
       {/*  */}
       <About />
+      <Contact />
       {/*  */}
     </div>
   );
