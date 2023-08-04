@@ -1,13 +1,154 @@
 import {
+  AiFillHeart,
+  AiFillStar,
+  AiOutlineArrowUp,
   AiOutlinePhone,
   AiOutlineSearch,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 
+import axios from "../axios";
+import Spinner from "../components/Spinner";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import Masonry from "react-masonry-css";
+import { Link } from "react-router-dom";
+
 const Cars = () => {
+  const [loading, setLoading] = useState(false);
+  const [allCars, setAllCars] = useState([]);
+
+  // handle fetch
+  const handleFetch = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get("/car/all");
+      if (response) {
+        setAllCars(response.data);
+        console.log(response.data);
+        setLoading(false);
+      }
+      setLoading(false);
+    } catch (error) {
+      toast.error("Error Fetching Cars");
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    handleFetch();
+  }, []);
+
+  const breakpointColumnsObj = {
+    default: 4,
+    3000: 5,
+    2000: 4,
+    1200: 3,
+    1000: 2,
+    500: 1,
+  };
+
+  //   pagination states
+  const [currentPage, setCurrentPage] = useState(1);
+  const recordsPerPage = 10;
+  const lastIndex = currentPage * recordsPerPage;
+  const firstIndex = lastIndex - recordsPerPage;
+  const records = allCars?.slice(firstIndex, lastIndex);
+  const npage = Math.ceil(allCars?.length / recordsPerPage);
+  const numbers = [...Array(npage + 1).keys()].slice(1);
+
+  const [start, setStart] = useState(1);
+  const [end, setEnd] = useState(4);
+
+  const handleClick = (number) => {
+    setStart(number);
+    setEnd(number + 3);
+  };
+
+  const prevPage = () => {
+    if (currentPage !== 1) {
+      setCurrentPage(currentPage - 1);
+      handleClick(currentPage);
+    }
+  };
+
+  const nextPage = () => {
+    if (currentPage !== npage) {
+      setCurrentPage(currentPage + 1);
+      handleClick(currentPage);
+    }
+  };
+
+  const changeCurrentPage = (id) => {
+    setCurrentPage(id);
+  };
+
+  // search  states
+  const [searchText, setSearchText] = useState("");
+  const [searchTimeout, setsearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState(null);
+
+  // search user func
+  const handleSearchChange = async (e) => {
+    e.preventDefault();
+    clearTimeout(setsearchTimeout);
+
+    setSearchText(e.target.value);
+    // console.log(searchText);
+
+    setsearchTimeout(
+      setTimeout(() => {
+        const searchResults = allCars?.filter(
+          (item) =>
+            item.title.toLowerCase().includes(searchText.toLowerCase()) ||
+            item.gear.toLowerCase().includes(searchText.toLowerCase()) ||
+            item.status.toLowerCase().includes(searchText.toLowerCase())
+        );
+
+        setSearchedResults(searchResults);
+      }, 500)
+    );
+  };
+
+  let user = true;
+
+  // scroll to top functionality
+  const [showArrow, setShowArrow] = useState(false);
+
+  // const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.pageYOffset > 300) {
+        setShowArrow(true);
+      } else {
+        setShowArrow(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleScrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <div>
       {/* wrapper */}
+      {/* arrow to scroll to top */}
+      {showArrow && (
+        <div
+          className="fixed bottom-20 right-4 text-3xl z-[999] cursor-pointer bg-teal-700 text-zinc-50 rounded-full p-[5px]"
+          onClick={handleScrollTop}
+        >
+          <AiOutlineArrowUp />
+        </div>
+      )}
       <div>
         {/* topribbon */}
         <div className=" bg-teal-800  text-zinc-300 flex justify-between items-center px-[10px] md:px-[2em] xl:px-[5em] py-[6px] ">
@@ -54,12 +195,15 @@ const Cars = () => {
                 type="text"
                 placeholder="Search"
                 className="w-full bg-transparent outline-none border-none"
+                required
+                value={searchText}
+                onChange={handleSearchChange}
               />
             </form>
           </div>
         </div>
         {/* hero  */}
-        <div className="flex flex-col md:flex-row bg-zinc-300 gap-[30px] md:gap-[15px] mx-[10px] md:mx-[2em] xl:mx-[5em] mt-[25px] p-[10px] rounded-lg   items-start sm:items-center">
+        {/* <div className="flex flex-col md:flex-row bg-zinc-300 gap-[30px] md:gap-[15px] mx-[10px] md:mx-[2em] xl:mx-[5em] mt-[25px] p-[10px] rounded-lg   items-start sm:items-center">
           <div className="flex-[0.6]">
             <div>
               <p className="font-bold text-teal-800  text-xl sm:text-4xl mb-[5px] sm:mb-[18px]">
@@ -84,9 +228,209 @@ const Cars = () => {
               className="w-[600px] h-[400px] object-cover rounded-lg"
             />
           </div>
+        </div> */}
+        {/*  data all cars*/}
+        <div className="mx-[10px] md:mx-[2em] xl:mx-[5em] mt-[25px]">
+          {loading ? (
+            <div className="h-[80vh] w-full flex justify-center items-center">
+              <Spinner message="Fetching Cars ..." />
+            </div>
+          ) : (
+            <>
+              {searchText ? (
+                <>
+                  <div className="mb-[15px] text-zinc-700">
+                    {searchText && <p>Results For : {searchText}</p>}
+                    {/* {searchedResults?.length} */}
+                  </div>
+                  {searchedResults.length >= 1 ? (
+                    <>
+                      <Masonry
+                        breakpointCols={breakpointColumnsObj}
+                        className="my-masonry-grid "
+                        columnClassName="my-masonry-grid_column"
+                      >
+                        {/* {alert(records.length)} */}
+
+                        {searchedResults?.map((item) => (
+                          <div
+                            key={item._id}
+                            className="bg-slate-200 rounded-lg"
+                          >
+                            <div className="image-item rounded-lg">
+                              <Link to={`/post/${item._id}`}>
+                                <img
+                                  src={item.image}
+                                  alt=""
+                                  className="w-full rounded-md max-h-[800px] object-cover"
+                                />
+                              </Link>
+                              <div className="mt-[10px] px-[6px] pb-[10px] ">
+                                <p className="font-bold mb-[10px]">
+                                  {item.title}
+                                </p>
+                                <div className="flex justify-between mb-[10px] items-center">
+                                  <p>{item.seats} Seater</p>
+                                  <p>Ksh. {item.price} / day</p>
+                                </div>
+
+                                <div className="flex justify-between mb-[10px] items-center">
+                                  <p>{item.status}</p>
+                                  <p>{item.gear}</p>
+                                </div>
+
+                                <div className="flex justify-end">
+                                  {user && (
+                                    <div>
+                                      <p
+                                        className="text-emerald-800 text-xl cursor-pointer"
+                                        // onClick={() => handleAddFavorite(item)}
+                                      >
+                                        <AiOutlineShoppingCart
+                                          title="Add To List"
+                                          className="text-2xl"
+                                        />
+                                      </p>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </Masonry>
+                    </>
+                  ) : (
+                    <div className="flex justify-center items-center h-[66vh]">
+                      <p className="text-xl text-zinc-800">
+                        No results 😥 for {searchText}
+                      </p>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* nav numbers */}
+                  <nav className="flex justify-center">
+                    <ul className="flex gap-[2em] mt-[10px] px-[5px] py-[10px] items-center ">
+                      {/* map */}
+
+                      <>
+                        <li>
+                          <a
+                            href="#"
+                            onClick={prevPage}
+                            className="text-zinc-600"
+                          >
+                            <p className="text-zinc-600">Prev</p>
+                          </a>
+                        </li>
+                        <li className="flex gap-[10px] ">
+                          {numbers.slice(start - 1, end).map((item, index) => (
+                            <li
+                              key={index}
+                              className={`normal-nav ${
+                                currentPage === item && "active-nav"
+                              }`}
+                            >
+                              <a
+                                href="#"
+                                onClick={() => {
+                                  handleClick(item);
+                                  changeCurrentPage(item);
+                                }}
+                              >
+                                <p className="text-zinc-600">{item}</p>
+                              </a>
+                            </li>
+                          ))}
+                        </li>
+
+                        <li>
+                          <a href="#" onClick={nextPage}>
+                            <p className="text-zinc-700">Next</p>
+                          </a>
+                        </li>
+                      </>
+                    </ul>
+                  </nav>
+                  {/*  */}
+                  <div>
+                    {records.length >= 1 ? (
+                      <>
+                        <Masonry
+                          breakpointCols={breakpointColumnsObj}
+                          className="my-masonry-grid "
+                          columnClassName="my-masonry-grid_column"
+                        >
+                          {/* {alert(records.length)} */}
+
+                          {records.map((item) => (
+                            <div
+                              key={item._id}
+                              className="bg-slate-200 rounded-lg"
+                            >
+                              <div className="image-item rounded-lg">
+                                <Link to={`/post/${item._id}`}>
+                                  <img
+                                    src={item.image}
+                                    alt=""
+                                    className="w-full rounded-md max-h-[800px] object-cover"
+                                  />
+                                </Link>
+                                <div className="mt-[10px] px-[6px] pb-[10px] ">
+                                  <p className="font-bold mb-[10px]">
+                                    {item.title}
+                                  </p>
+                                  <div className="flex justify-between mb-[10px] items-center">
+                                    <p>{item.seats} Seater</p>
+                                    <p>Ksh. {item.price} / day</p>
+                                  </div>
+
+                                  <div className="flex justify-between mb-[10px] items-center">
+                                    <p>{item.status}</p>
+                                    <p>{item.gear}</p>
+                                  </div>
+
+                                  <div className="flex justify-end">
+                                    {user && (
+                                      <div>
+                                        <p
+                                          className="text-emerald-800 text-xl cursor-pointer"
+                                          // onClick={() => handleAddFavorite(item)}
+                                        >
+                                          <AiOutlineShoppingCart
+                                            title="Add To List"
+                                            className="text-2xl"
+                                          />
+                                        </p>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </Masonry>
+                      </>
+                    ) : (
+                      <div className="flex justify-center my-[4em]">
+                        <p className="text-3xl text-zinc-300">
+                          No Trades To Show 😥
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
+            </>
+          )}
+
+          {/*  */}
         </div>
         {/*  */}
       </div>
+
       {/*  */}
     </div>
   );

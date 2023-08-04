@@ -2,6 +2,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Splash from "./pages/Splash";
 import Cars from "./pages/Cars";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -12,6 +14,7 @@ function App() {
           <Route path="/cars" element={<Cars />} />
         </Routes>
       </BrowserRouter>
+      <ToastContainer />
     </div>
   );
 }
