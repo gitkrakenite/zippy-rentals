@@ -137,6 +137,55 @@ const Cars = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const [cartItemCount, setCartItemCount] = useState(0);
+
+  // let us use localstorage to store favorites
+  const handleAddCart = async (product) => {
+    // Retrieve the existing cart items from localStorage
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+
+    // Check if the product already exists in the cart
+    const existingProduct = cartItems.find((item) => item._id === product._id);
+
+    if (existingProduct) {
+      // Product already exists, return a message
+      toast.error("Already Added To List");
+      return;
+    }
+
+    // Create a new cart with the existing items and the new product
+    const updatedCart = [...cartItems, product];
+
+    // Update the cart items in localStorage
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+
+    // Update the cart item count in the parent component
+    setCartItemCount((prevCount) => prevCount + 1);
+
+    toast.success(`${product.title} added to List`);
+    return;
+  };
+
+  // read from state
+  useEffect(() => {
+    // Function to count the number of items in localStorage
+    const countItemsInCart = () => {
+      try {
+        // Retrieve the existing cart items from localStorage
+        const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+        // Get the number of items in the cart
+        const itemCount = cartItems.length;
+        // Update the state with the item count
+        setCartItemCount(itemCount);
+      } catch (error) {
+        // Handle any errors that might occur during parsing or reading from localStorage
+        console.error("Error reading from localStorage:", error);
+      }
+    };
+
+    countItemsInCart(); // Call the function when the component mounts
+  }, [handleAddCart]);
+
   return (
     <div>
       {/* wrapper */}
@@ -184,7 +233,7 @@ const Cars = () => {
 
             <div className="flex gap-[10px] items-center">
               <AiOutlineShoppingCart className="text-2xl" />
-              <p>(2)</p>
+              <p>({cartItemCount})</p>
             </div>
           </div>
 
@@ -258,13 +307,12 @@ const Cars = () => {
                             className="bg-slate-200 rounded-lg"
                           >
                             <div className="image-item rounded-lg">
-                              <Link to={`/post/${item._id}`}>
-                                <img
-                                  src={item.image}
-                                  alt=""
-                                  className="w-full rounded-md max-h-[800px] object-cover"
-                                />
-                              </Link>
+                              <img
+                                src={item.image}
+                                alt=""
+                                className="w-full rounded-md max-h-[800px] object-cover"
+                              />
+
                               <div className="mt-[10px] px-[6px] pb-[10px] ">
                                 <p className="font-bold mb-[10px]">
                                   {item.title}
@@ -280,19 +328,17 @@ const Cars = () => {
                                 </div>
 
                                 <div className="flex justify-end">
-                                  {user && (
-                                    <div>
-                                      <p
-                                        className="text-emerald-800 text-xl cursor-pointer"
-                                        // onClick={() => handleAddFavorite(item)}
-                                      >
-                                        <AiOutlineShoppingCart
-                                          title="Add To List"
-                                          className="text-2xl"
-                                        />
-                                      </p>
-                                    </div>
-                                  )}
+                                  <div>
+                                    <p
+                                      className="text-emerald-800 text-xl cursor-pointer"
+                                      onClick={() => handleAddCart(item)}
+                                    >
+                                      <AiOutlineShoppingCart
+                                        title="Add To List"
+                                        className="text-2xl"
+                                      />
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -371,13 +417,12 @@ const Cars = () => {
                               className="bg-slate-200 rounded-lg"
                             >
                               <div className="image-item rounded-lg">
-                                <Link to={`/post/${item._id}`}>
-                                  <img
-                                    src={item.image}
-                                    alt=""
-                                    className="w-full rounded-md max-h-[800px] object-cover"
-                                  />
-                                </Link>
+                                <img
+                                  src={item.image}
+                                  alt=""
+                                  className="w-full rounded-md max-h-[800px] object-cover"
+                                />
+
                                 <div className="mt-[10px] px-[6px] pb-[10px] ">
                                   <p className="font-bold mb-[10px]">
                                     {item.title}
@@ -393,19 +438,17 @@ const Cars = () => {
                                   </div>
 
                                   <div className="flex justify-end">
-                                    {user && (
-                                      <div>
-                                        <p
-                                          className="text-emerald-800 text-xl cursor-pointer"
-                                          // onClick={() => handleAddFavorite(item)}
-                                        >
-                                          <AiOutlineShoppingCart
-                                            title="Add To List"
-                                            className="text-2xl"
-                                          />
-                                        </p>
-                                      </div>
-                                    )}
+                                    <div>
+                                      <p
+                                        className="text-emerald-800 text-xl cursor-pointer"
+                                        onClick={() => handleAddCart(item)}
+                                      >
+                                        <AiOutlineShoppingCart
+                                          title="Add To List"
+                                          className="text-2xl"
+                                        />
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
