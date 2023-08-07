@@ -4,6 +4,7 @@ import Splash from "./pages/Splash";
 import Cars from "./pages/Cars";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Splash />} />
           <Route path="/cars" element={<Cars />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer />

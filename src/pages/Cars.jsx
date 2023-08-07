@@ -1,6 +1,4 @@
 import {
-  AiFillHeart,
-  AiFillStar,
   AiOutlineArrowUp,
   AiOutlinePhone,
   AiOutlineSearch,
@@ -109,8 +107,6 @@ const Cars = () => {
       }, 500)
     );
   };
-
-  let user = true;
 
   // scroll to top functionality
   const [showArrow, setShowArrow] = useState(false);
@@ -231,10 +227,12 @@ const Cars = () => {
 
             <div className="text-user">Hello John</div>
 
-            <div className="flex gap-[10px] items-center">
-              <AiOutlineShoppingCart className="text-2xl" />
-              <p>({cartItemCount})</p>
-            </div>
+            <Link to="/checkout">
+              <div className="flex gap-[10px] items-center">
+                <AiOutlineShoppingCart className="text-2xl" />
+                <p>({cartItemCount})</p>
+              </div>
+            </Link>
           </div>
 
           <div className="flex-[0.4] w-full flex justify-end">
@@ -292,7 +290,7 @@ const Cars = () => {
                     {searchText && <p>Results For : {searchText}</p>}
                     {/* {searchedResults?.length} */}
                   </div>
-                  {searchedResults.length >= 1 ? (
+                  {searchedResults?.length >= 1 ? (
                     <>
                       <Masonry
                         breakpointCols={breakpointColumnsObj}
