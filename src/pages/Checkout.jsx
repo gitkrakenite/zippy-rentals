@@ -74,13 +74,45 @@ const Checkout = () => {
     getSortedProductsFromLocalStorage();
     // Update the cart item count in the parent component
     // setCartItemCount((prevCount) => prevCount - 1);
-    toast.success("Removed From Favorites");
+    toast.success("Removed From Cart");
   };
 
   const [pickUp, setPickUp] = useState(false);
   const [delivery, setDelivery] = useState(false);
 
-  const activateBooking = () => {};
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const activateBooking = () => {
+    setPickUp(false);
+    // Clear the entire localStorage
+    localStorage.clear();
+
+    // Update the cart state to an empty array
+    setRentals([]);
+    toast.success("Booking succesful.");
+    toast.success("You can go get the cars at our stations.");
+  };
+
+  const handleOrder = (e) => {
+    e.preventDefault();
+
+    if (!address) {
+      return toast.error("Address missing");
+    }
+
+    if (!phone) {
+      return toast.error("Phone number missing");
+    }
+
+    setDelivery(false);
+    // Clear the entire localStorage
+    localStorage.clear();
+
+    // Update the cart state to an empty array
+    setRentals([]);
+    toast.success("Order Sent Succesfully.");
+  };
 
   return (
     <div>
@@ -96,6 +128,16 @@ const Checkout = () => {
           </p>
         </div>
         {/* cart items */}
+        {rentals.length < 1 && (
+          <div className="my-[10em]">
+            <h2 className="mb-[10px]">
+              Hello There. There is no car in the list.{" "}
+            </h2>
+            <Link to="/cars" className="text-teal-600 underline text-center">
+              All Cars
+            </Link>
+          </div>
+        )}
         <div className="mt-[2em]">
           {rentals?.map((item) => (
             <div key={item._id} className="bg-slate-200 rounded-lg mb-[20px] ">
@@ -122,7 +164,7 @@ const Checkout = () => {
                 <div>
                   <p
                     className="text-orange-800 text-xl cursor-pointer"
-                    // onClick={() => handleAddCart(item)}
+                    onClick={() => handleRemoveFromCart(item._id)}
                   >
                     <AiOutlineCloseCircle
                       title="Remove From Cart"
@@ -136,26 +178,31 @@ const Checkout = () => {
         </div>
 
         {/* shipping details */}
-        <div className="mt-[20px] flex justify-between items-center">
-          <p
-            className="text-teal-800 cursor-pointer"
-            onClick={() => {
-              setDelivery(true);
-              setPickUp(false);
-            }}
-          >
-            Delivery
-          </p>
-          <p
-            className="text-teal-800 cursor-pointer"
-            onClick={() => {
-              setPickUp(true);
-              setDelivery(false);
-            }}
-          >
-            Pick Up
-          </p>
-        </div>
+        {rentals.length > 1 && (
+          <>
+            <h2 className="mb-[1em]">CHOOSE A MODE BELOW</h2>
+            <div className=" mb-[15px]  sm:mt-[80px] flex justify-between items-center">
+              <p
+                className="text-teal-800 cursor-pointer"
+                onClick={() => {
+                  setDelivery(true);
+                  setPickUp(false);
+                }}
+              >
+                Delivery
+              </p>
+              <p
+                className="text-teal-800 cursor-pointer"
+                onClick={() => {
+                  setPickUp(true);
+                  setDelivery(false);
+                }}
+              >
+                Pick Up
+              </p>
+            </div>
+          </>
+        )}
         {/* options */}
         {delivery && (
           <div className="mt-[20px]">
@@ -167,7 +214,7 @@ const Checkout = () => {
               </p>
             </div>
 
-            <form>
+            <form className="mt-[15px]" onSubmit={handleOrder}>
               <div className="flex flex-col gap-[10px] mb-[20px]">
                 <label htmlFor="address" className="text-lg text-zinc-600">
                   Please Enter Delivery Address
@@ -179,6 +226,8 @@ const Checkout = () => {
                   rows="3"
                   placeholder="Be as specific as possible"
                   className="bg-transparent border border-zinc-400 rounded-xl p-[6px] outline-none"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
                 ></textarea>
               </div>
               <div className="flex flex-col gap-[10px] mb-[20px]">
@@ -191,10 +240,15 @@ const Checkout = () => {
                   name="phone"
                   id="phone"
                   className="bg-transparent border border-zinc-400 rounded-xl p-[6px] outline-none"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </div>
               <div className="mb-[20px]">
-                <button className="bg-teal-800 w-full p-[10px] text-zinc-200 rounded-md">
+                <button
+                  className="bg-teal-800 w-full p-[10px] text-zinc-200 rounded-md"
+                  onSubmit={handleOrder}
+                >
                   Order Now
                 </button>
               </div>
